@@ -8,14 +8,14 @@ import { ConnectButton } from '../web3/components/index'
 const Header = () => {
   return (
     <div className="header">
-    <Navbar collapseOnSelect expand="lg" variant="light" fixed="top">
+    <Navbar collapseOnSelect expand="lg" variant="light" fixed="top" className='navbar'>
       <Navbar.Brand as={Link} to="/">
         {/* <img src={logo} alt={WEBSITE_NAME} className="header-logo-image" /> */}
         {WEBSITE_NAME}
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
-        <Nav className="mr-auto ml-30">
+        <Nav className="mr-auto">
           {MENU_LINKS.map(ml => (
             <Nav.Link href='#' as={Link} to={ml.to}>{ml.name}</Nav.Link>
           ))}
