@@ -28,4 +28,4 @@ jobs:
         username: superuser@merbeth.dev
         password: ${{ secrets.ncpw }}
         local-dir: ./build/
-        server-dir: ./merbeth.dev/projects/nft-ne-fu1/
+        server-dir: ./public_html/projects/nft-ne-fu1/
