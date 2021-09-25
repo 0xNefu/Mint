@@ -216,8 +216,6 @@ abstract contract ERC165 is IERC165 {
 
 // File: @openzeppelin/contracts/utils/Strings.sol
 
-
-
 pragma solidity ^0.8.0;
 
 /**
@@ -284,8 +282,6 @@ library Strings {
 }
 
 // File: @openzeppelin/contracts/utils/Address.sol
-
-
 
 pragma solidity ^0.8.0;
 
@@ -504,10 +500,7 @@ library Address {
 
 // File: @openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol
 
-
-
 pragma solidity ^0.8.0;
-
 
 /**
  * @title ERC-721 Non-Fungible Token Standard, optional metadata extension
@@ -531,8 +524,6 @@ interface IERC721Metadata is IERC721 {
 }
 
 // File: @openzeppelin/contracts/token/ERC721/IERC721Receiver.sol
-
-
 
 pragma solidity ^0.8.0;
 
@@ -986,11 +977,7 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
 
 // File: @openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol
 
-
-
 pragma solidity ^0.8.0;
-
-
 
 /**
  * @dev This implements an optional extension of {ERC721} defined in the EIP that adds
@@ -1230,7 +1217,8 @@ contract CryptoSnowmen is ERC721Enumerable, Ownable { // contract name to yours
   uint256 public maxSupply = 10000; // max supply, contract will stop minting after this amount is reach in your open sea colection
   uint256 public maxMintAmount = 10; // max allowed to mint at one time N.O.T.E must be => than line 1241 - mint(msg.sender, 10);
   bool public paused = false;
-  mapping(address => bool) public whitelisted;
+  mapping(address => bool) public whitelisted; // unlimited minting
+  mapping(address => bool) public airdropList;
 
   constructor(
     string memory _name,   // String are annoying and we will need an ABI code to verify contract because of this
@@ -1257,12 +1245,19 @@ contract CryptoSnowmen is ERC721Enumerable, Ownable { // contract name to yours
     if (msg.sender != owner()) {
         if(whitelisted[msg.sender] != true) {
           require(msg.value >= cost * _mintAmount);
-        }
+        } 
     }
 
     for (uint256 i = 1; i <= _mintAmount; i++) {
       _safeMint(_to, supply + i);
     }
+  }
+  
+  function airdrop() public {
+      require(airdropList[msg.sender], 'no airdrop available for user');
+      airdropList[msg.sender] = false;
+      uint256 supply = totalSupply();
+      _safeMint(msg.sender, supply + 1);
   }
 
   function walletOfOwner(address _owner)
@@ -1316,6 +1311,12 @@ contract CryptoSnowmen is ERC721Enumerable, Ownable { // contract name to yours
   function pause(bool _state) public onlyOwner {
     paused = _state;
   }
+ 
+ function setAirdropList(address[] memory _userlist) public onlyOwner {
+     for(uint256 i = 0; i < _userlist.length; i++) {
+         airdropList[_userlist[i]] = true;
+     }
+ }
  
  function whitelistUser(address _user) public onlyOwner {
     whitelisted[_user] = true;
